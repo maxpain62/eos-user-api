@@ -4,14 +4,16 @@ spring:
   boot:
        admin:
             client:
-                url: http://app.edshopper.com:8090
+                url: http://eos-micro-services-admin-service:8090 
+                instance:
+                  service-base-url: http://eos-user-api-service:8085
   application:
     name: user-service
   cloud:
     config:
-      uri: http://app.edshopper.com:8888
+      uri: http://eos-cloud-config-api-service:8888
   config:
-    import: optional:configserver:http://app.edshopper.com:8888
+    import: optional:configserver:http://eos-cloud-config-api-service:8888
 eureka:
   client:
     registerWithEureka: true
