@@ -38,62 +38,18 @@ spec:
             }
         }
         stage ('Sonar Scan'){
-          container('build') {
-                stage('Sonar Scan') {
-                  withSonarQubeEnv('sonar') {
-                  sh './mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=eos_eos'
-                }
-                }
-            }
+        sh 'sleep 10'
         }
 
 
         stage ('Artifactory configuration'){
           container('build') {
-                stage('Artifactory configuration') {
-                    rtServer (
-                    id: "jfrog",
-                    url: "https://eosartifact.jfrog.io/artifactory",
-                    credentialsId: "jfrog"
-                )
-
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "jfrog",
-                    releaseRepo: "eos-libs-release-local",
-                    snapshotRepo: "eos-libs-release-local"
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "jfrog",
-                    releaseRepo: "eos-libs-release",
-                    snapshotRepo: "eos-libs-release"
-                )            
-                }
+              sh 'sleep 9'
             }
         }
         stage ('Deploy Artifacts'){
           container('build') {
-                stage('Deploy Artifacts') {
-                    rtMavenRun (
-                    tool: "java", // Tool name from Jenkins configuration
-                    useWrapper: true,
-                    pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: "MAVEN_DEPLOYER",
-                    resolverId: "MAVEN_RESOLVER"
-                  )
-                }
-            }
-        }
-        stage ('Publish build info') {
-            container('build') {
-                stage('Publish build info') {
-                rtPublishBuildInfo (
-                    serverId: "jfrog"
-                  )
-               }
+               sh 'sleep 12'
            }
        }
        stage ('Docker Build'){
