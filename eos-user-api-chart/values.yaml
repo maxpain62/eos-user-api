@@ -3,7 +3,7 @@ replicaCount: 1
 containers:
   image: 134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-user-api:latest
 
-port: 8083
+port: 8085
 
 labels:
   app: eos-user-api
