@@ -1,0 +1,12 @@
+replicaCount: 1
+
+containers:
+  image: 134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-user-api:latest
+
+port: 8083
+
+labels:
+  app: eos-user-api
+  env: dev
+
+namespace: eos-dev
