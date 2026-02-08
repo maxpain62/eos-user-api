@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: maven-build
+spec:
+  serviceAccountName: code-artifact-sa
+  containers:
+    - name: buildkit
+      image: moby/buildkit:v0.15.0
+      command:
+        - cat
+      tty: true
+      volumeMounts:
+        - name: home-jenkins
+          mountPath: /home/jenkins/
+        - name: maven-cache
+          mountPath: /root/.m2
+        - name: buildkit-secret
+          mountPath: /root/.docker
+        - name: certs
+          mountPath: /certs
+    - name: aws-cli-helm
+      image: maxpain62/aws-cli:helm-3.20.0
+      command:
+        - cat
+      tty: true
+      volumeMounts:
+        - name: maven-cache
+          mountPath: /root/.m2
+        - name: home-jenkins
+          mountPath: /home/jenkins/
+    - name: maven
+      image: maxpain62/maven-3.9:jre11
+      command:
+        - cat
+      tty: true
+      resources:
+        limits:
+          memory: "2Gi"
+          cpu: "1000m"
+      volumeMounts:
+        - name: home-jenkins
+          mountPath: /home/jenkins/
+        - name: maven-cache
+          mountPath: /root/.m2
+  volumes:
+    - name: home-jenkins
+      emptyDir:
+    - name: maven-cache
+      emptyDir: {}
+    - name: buildkit-secret
+      secret:
+        secretName: ecr-cred
+        items:
+          - key: .dockerconfigjson
+            path: config.json
+    - name: certs
+      secret:
+        secretName: buildkit-client-certs
+    - name: git-tmp-volume
+      emptyDir: {}
